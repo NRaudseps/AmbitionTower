@@ -1,0 +1,167 @@
+package o1.game.entities.player
+
+import o1.game.*
+import o1.game.entities.{CombatEntity, OverworldEntity}
+import o1.game.entities.npc.Mob
+import o1.game.item.*
+import o1.game.stages.overworldArea.{Elevator2F, Elevator3F, OverworldArea}
+
+import scala.collection.mutable.Map
+import scala.util.Random
+
+/** A `Player` object represents a player character controlled by the real-life user
+  * of the program.
+  *
+  * A player object’s state is mutable: the player’s location and possessions can change,
+  * for instance.
+  *
+  * @param startingArea  the player’s initial location */
+
+class Player(startingArea: OverworldArea) extends OverworldEntity(startingArea) , CombatEntity(10 , 5):
+  private var quitCommandGiven = false              // one-way flag
+  private val ownedItems = Map[String,Item]()
+  private var tempEffect : Option[String] = None
+  val specialString: String = "@" //appended at the end of a [String] return value to indicate non-turn-costing outcomes
+  /** Determines if the player has indicated a desire to quit the game. */
+
+  def hasQuit = this.quitCommandGiven
+  def inCombat: Boolean = this.enemies.nonEmpty
+  def enemies: Map[String , Mob] = this.currentLocation.mobs
+  def clearTempEffect() = tempEffect = None
+  
+
+
+  def die() =
+    this.currentLocation.player = None
+    this.remainingHealth = 0
+    this.isDead = true
+
+  /** Attempts to move the player in the given direction. This is successful if there
+    * is an exit from the player’s current location towards the direction name. Returns
+    * a description of the result: "You go DIRECTION." or "You can't go DIRECTION." */
+  private def move(destination: OverworldArea)=
+    this.currentLocation.player = None
+    this.currentLocation = destination
+    this.currentLocation.player = Some(this)
+
+  def go(direction: String) : String =
+    val destination = this.currentLocation.neighbor(direction)
+    def description: String = if destination.isDefined then s"You go $direction." else s"You can't go $direction!"
+    destination match
+      case Some(Elevator2F) => {
+        if Elevator2F.isAccessible then
+          move(Elevator2F)
+          description
+        else "This floor is not accessible yet! Hint: Find an item to help you."
+      }
+      case Some(Elevator3F) => {
+        if Elevator3F.isAccessible then
+          move(Elevator3F)
+          description
+        else "The floor above is a VIP area! You do not have VIP access! Hint: Explore the current floor."
+      }
+      case Some(area) => {
+        move(area)
+        description
+      }
+      case None => description
+
+  def get(itemName:String): String =
+    val pickedUpItem = this.currentLocation.removeItem(itemName)
+    if pickedUpItem.isDefined then
+      pickedUpItem.map(this.ownedItems += itemName -> _)
+      "You pick up the " + itemName + s".\n${this.ownedItems(itemName).description}"
+    else
+      s"There is no ${itemName} here to pick up." + specialString
+
+  def drop(itemName:String):String=
+    if this.has(itemName) then
+      this.ownedItems.get(itemName).foreach(this.currentLocation.addItem)
+      this.ownedItems -= itemName
+      "You drop the " + itemName + "."
+    else "You don't have that!" + specialString
+
+  def examine(itemName:String):String =
+    if this.has(itemName) then
+      s"You look closely at the ${itemName}.\n${this.ownedItems(itemName).description}"
+    else "If you want to examine something, you need to pick it up first." + specialString
+
+  def has(itemName:String): Boolean=
+    this.ownedItems.contains(itemName)
+
+  def inventory: String =
+    val outcome = {if this.ownedItems.nonEmpty then
+                    s"You are carrying:\n${this.ownedItems.keys.mkString("\n")}"
+                  else "You are empty-handed." }
+    outcome + specialString
+
+  def use(itemName: String): String =
+    if this.has(itemName) then
+      val item = this.ownedItems(itemName)
+      if item.isUseable then
+        this.ownedItems -= itemName
+        "You used the item!\n\n" + item.effect()
+      else s"${item.name} can't be used!" + specialString
+    else "You don't have this item!" + specialString
+
+  /** Causes the player to rest for a short while.
+    * Returns a description of what happened. */
+  def rest():String =
+    val initialHealth = this.remainingHealth
+    val healedAmount = this.maxHealth/5
+    this.heal(healedAmount)
+    s"You rest for a while and heal ${this.remainingHealth-initialHealth} HP."
+
+  /** Signals that the player wants to quit the game. Returns a description of what happened
+    * within the game as a result (which is the empty string, in this case). */
+  def quit() =
+    this.quitCommandGiven = true
+    ""
+
+  def attack(enemy: String): String=
+    if this.enemies.contains(enemy) then
+      val damage = this.attackPower
+      this.enemies(enemy).remainingHealth -= damage
+      s"You dealt ${damage} to ${enemy}!"
+    else
+      "Please specify which enemy to attack." + specialString
+
+  def guard(): String =
+    tempEffect = Some("guarded")
+    "You guarded. Damage halved for this turn!"
+
+  def dodge(): String =
+    val generator = Random.nextInt(20) + 1
+    if generator >= difficultyCheck then
+      tempEffect = Some("dodged")
+      "You prepared to dodge incoming attacks."
+    else "You tried to dodge incoming attacks, but failed! Hint: The odds are worse than a coin flip."
+
+  def suffer(cause: String , damage: Int): String =
+    val initialHP = remainingHealth
+    if this.tempEffect.contains("guarded") then
+      remainingHealth -= damage / 2
+      s"You took ${initialHP - remainingHealth} damage from $cause! The damage was cut in half by your keen guard!"
+    else if this.tempEffect.contains("dodged") then
+      s"You fully dodged attacks from $cause! No damage suffered!"
+    else
+      remainingHealth -= damage
+      s"You took ${initialHP - remainingHealth} damage from $cause! Ouch"
+
+    /*if effect.isDefined && damage != 0 then
+      effect.foreach(statusEffects += _)
+      val effectTaken = effect.map(effect => s"You also got afflicted with $effect! Bummer.").getOrElse("")
+      val dmgTaken = s"You took $damage damage from $cause!"
+      dmgTaken + effectTaken
+    else if effect.isDefined && damage == 0 then
+      effect.map(effect => s"You got afflicted with $effect!").getOrElse("")
+    else s"You took $damage damage from $cause!"*/
+
+
+  // in the comment is a possible implementation for lingering status effects in the future;
+  // for now, there's only a "rage" status caused by potions, and it will be implemented alone
+
+  /** Returns a brief description of the player’s state, for debugging purposes. */
+  override def toString = "Now at: " + this.currentLocation.name
+
+end Player
