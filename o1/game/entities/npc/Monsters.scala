@@ -41,14 +41,11 @@ class BootlickerGolem(val id: Int, startingArea: OverworldArea, enemy: Player) e
 
   var index = 0
   def pathFind: String =
-    {
-    while index < 3 && this.currentLocation.neighbor(directions(index)).isEmpty do
-      index += 1
-    }
-    val direction: String = directions(index) //always returns last direction if the other 3 are not valid; the move method will automatically return 
-                                              //if this last direction is also not possible to move to
-    index = 0
-    direction
+    if this.currentLocation.neighbor(directions(index)).isEmpty then
+      index +=1
+      if index > 3 then
+        index = 0
+    directions(index)
 
   var counter = 0
   def fight() =
