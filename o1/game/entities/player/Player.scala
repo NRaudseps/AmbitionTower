@@ -1,8 +1,8 @@
 package o1.game.entities.player
 
 import o1.game.*
-import o1.game.entities.{CombatEntity, OverworldEntity}
 import o1.game.entities.npc.Mob
+import o1.game.entities.{CombatEntity, OverworldEntity}
 import o1.game.item.*
 import o1.game.stages.overworldArea.{Elevator2F, Elevator3F, OverworldArea}
 
@@ -26,6 +26,7 @@ class Player(startingArea: OverworldArea) extends OverworldEntity(startingArea) 
 
   def hasQuit = this.quitCommandGiven
   def inCombat: Boolean = this.enemies.nonEmpty
+  def inDialogue: Boolean = this.currentLocation.dialogue.nonEmpty
   def enemies: Map[String , Mob] = this.currentLocation.mobs
   def clearTempEffect() = tempEffect = None
   

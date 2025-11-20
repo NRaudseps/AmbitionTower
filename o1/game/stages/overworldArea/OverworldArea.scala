@@ -4,7 +4,7 @@ package o1.game.stages.overworldArea
 import o1.game.entities.npc.Mob
 import o1.game.entities.player.Player
 import o1.game.item.Item
-import o1.game.stages.Stage
+import o1.game.stages.{DialogueArea, Stage}
 
 import scala.collection.mutable.Map
 
@@ -21,6 +21,7 @@ class OverworldArea(name: String, val description: String) extends Stage(name):
   val items =  Map[String, Item]()
   val mobs = Map[String , Mob]()
   var player: Option[Player] = None
+  var dialogue: Option[DialogueArea] = None
 
   /** Returns the area that can be reached from this area by moving in the given direction. The result
     * is returned in an `Option`; `None` is returned if there is no exit in the given direction. */
@@ -54,6 +55,9 @@ class OverworldArea(name: String, val description: String) extends Stage(name):
     this.mobs.get(mobName).map(possibleMob =>
       {this.mobs -= possibleMob.name
        possibleMob})
+
+  def addDialogue(dialogueArea: DialogueArea) =
+    this.dialogue = Some(dialogueArea)
 
   def containsItem(itemName: String): Boolean=
     this.items.contains(itemName)
