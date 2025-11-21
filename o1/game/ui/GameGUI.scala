@@ -1,11 +1,12 @@
 package o1.game.ui
 
-import scala.swing.*
-import scala.swing.event.*
-import javax.swing.UIManager
 import o1.game.*
-import java.awt.{Point, Insets, Dimension}
-import scala.language.adhocExtensions // enable extension of Swing classes
+
+import java.awt.{Dimension, Insets, Point}
+import javax.swing.UIManager
+import scala.language.adhocExtensions
+import scala.swing.*
+import scala.swing.event.* // enable extension of Swing classes
 
 ////////////////// NOTE TO STUDENTS //////////////////////////
 // For the purposes of our course, it’s not necessary

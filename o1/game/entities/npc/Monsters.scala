@@ -1,22 +1,25 @@
 package o1.game.entities.npc
 
-import o1.game.entities.{CombatEntity, OverworldEntity}
 import o1.game.entities.player.Player
+import o1.game.entities.{CombatEntity, OverworldEntity}
 import o1.game.stages.overworldArea.OverworldArea
 
-class PrinterJamSlime(startingArea:OverworldArea, enemy: Player) extends Mob("Slime", enemy , ""), OverworldEntity(startingArea), CombatEntity(7,2):
+class PrinterJamSlime(startingArea: OverworldArea, enemy: Player) extends Mob("Slime", enemy, ""), OverworldEntity(startingArea), CombatEntity(7, 2):
+  // TODO: need better names. What the hell does alternate1 and alternate2 mean???
   var alternate1 = false
+
   def pathFind: String =
     alternate1 = !alternate1
     if alternate1 then
       "south"
     else
       "north"
-  
+
   def attack: String =
     this.enemy.suffer(this.name, this.attackPower)
-  
+
   var alternate2 = true
+
   def fight() =
     if remainingHealth > 0 then
       alternate2 = !alternate2
@@ -28,26 +31,27 @@ class PrinterJamSlime(startingArea:OverworldArea, enemy: Player) extends Mob("Sl
       this.die()
 
 class BootlickerGolem(val id: Int, startingArea: OverworldArea, enemy: Player) extends Mob("Bootlicker Golem | Employee's ID: " + id, enemy, ""), OverworldEntity(startingArea), CombatEntity(20, 5):
-  val directions =
-    {
-      if this.id % 2 != 0 then
+  val directions = {
+    if this.id % 2 != 0 then
       Vector[String]("north", "west", "south", "east").zipWithIndex.map((direction, index) => (index, direction)).toMap
     else
       Vector[String]("north", "east", "south", "west").zipWithIndex.map((direction, index) => (index, direction)).toMap
-    }
+  }
 
   def attack: String =
     this.enemy.suffer(this.name, this.attackPower)
 
   var index = 0
+
   def pathFind: String =
     if this.currentLocation.neighbor(directions(index)).isEmpty then
-      index +=1
+      index += 1
       if index > 3 then
         index = 0
     directions(index)
 
   var counter = 0
+
   def fight() =
     if this.remainingHealth > 0 then
       if counter < 3 then

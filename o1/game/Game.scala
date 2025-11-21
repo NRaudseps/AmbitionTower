@@ -1,7 +1,10 @@
 package o1.game
 
-import o1.game.entities.player.{CombatPlayerActions, OverworldPlayerActions}
+import o1.game.entities.npc.boss.BossDialogue
+import o1.game.entities.player.{CombatPlayerActions, DialoguePlayerActions, OverworldPlayerActions}
+import o1.game.stages.DialogueArea
 import o1.game.stages.combatArea.CombatArea
+
 
 class Game:
   /** the name of the game */
@@ -9,6 +12,7 @@ class Game:
   val overworld = Overworld(this)
   val player = this.overworld.player
   var combatArea: Option[CombatArea] = None
+  var dialogueArea: Option[DialogueArea] = None
   var turnCount = 0
   private val timeLimit = 99
 
@@ -17,7 +21,10 @@ class Game:
   def enterCombat() =
     combatArea = Some(CombatArea(this.overworld, this))
 
+  def enterDialogue() = this.dialogueArea = Some(DialogueArea(BossDialogue.root)) // TODO: temp solution, only works if boss is the only dialogue area
+
   def inCombat = this.combatArea.nonEmpty
+  def inDialogue = this.dialogueArea.nonEmpty
   
   def currentStage =
     this.combatArea.getOrElse(this.player.currentLocation)
@@ -41,6 +48,10 @@ class Game:
     val action = {
       if this.inCombat then
         CombatPlayerActions(command)
+      else if this.inDialogue then
+        this.dialogueArea match
+          case Some(area) => DialoguePlayerActions(command, area)
+          case None => OverworldPlayerActions(command)
       else
         OverworldPlayerActions(command)
     }
@@ -54,6 +65,9 @@ class Game:
           if !this.inCombat && this.player.inCombat then
             this.enterCombat()
             None
+          else if this.player.inDialogue && !this.inDialogue then
+            this.enterDialogue()
+            this.dialogueArea.map(_.currentDialogueText)
           else if !this.inCombat && !this.player.inCombat then
             this.overworld.playTurn()
             if this.player.inCombat then this.enterCombat()
