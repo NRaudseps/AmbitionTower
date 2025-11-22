@@ -5,7 +5,7 @@ import o1.game.stages.Stage
 class DialogueOption(val text: String, val isCorrect: Boolean, val nextNode: Option[DialogueNode])
 class DialogueNode(val text: String, val options: Vector[DialogueOption])
 
-class DialogueArea(root: DialogueNode) extends Stage("In Dialaogue"):
+class DialogueArea(root: DialogueNode) extends Stage("In Dialogue"):
   private var currentNode = root
 
   def currentDialogueText: String =

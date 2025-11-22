@@ -1,5 +1,4 @@
-package o1.game.stages.combatArea
-
+package o1.game.stages
 
 import o1.game.entities.npc.Mob
 import o1.game.entities.player.Player

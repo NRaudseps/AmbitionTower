@@ -2,8 +2,7 @@ package o1.game
 
 import o1.game.entities.npc.boss.BossDialogue
 import o1.game.entities.player.{CombatPlayerActions, DialoguePlayerActions, OverworldPlayerActions}
-import o1.game.stages.DialogueArea
-import o1.game.stages.combatArea.CombatArea
+import o1.game.stages.{CombatArea, DialogueArea}
 
 
 class Game:
