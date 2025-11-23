@@ -4,7 +4,7 @@ import o1.game.entities.player.Player
 import o1.game.entities.{CombatEntity, OverworldEntity}
 import o1.game.stages.overworldArea.OverworldArea
 
-trait Mob(val name: String, val enemy: Player, val description : String) extends OverworldEntity,CombatEntity:
+trait Mob(val keyword: String ,val name: String, val enemy: Player, val description : String) extends OverworldEntity,CombatEntity:
   
   this.currentLocation.addMob(this)
 

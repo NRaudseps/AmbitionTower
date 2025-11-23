@@ -23,8 +23,8 @@ class OverworldPlayerActions(input: String) extends PlayerActions:
       case "get"       => Some(actor.get(this.modifiers))
       case "drop"      => Some(actor.drop(this.modifiers))
       case "examine"   => Some(actor.examine(this.modifiers))
-      case "inventory" => Some(actor.inventory)
-      case "use"      => Some(actor.use(this.modifiers))
+      case "status"    => Some(actor.status)
+      case "use"       => Some(actor.use(this.modifiers))
       case other       => None
 
   /** Returns a textual description of the action object, for debugging purposes. */

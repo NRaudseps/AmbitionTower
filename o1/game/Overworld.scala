@@ -1,14 +1,16 @@
 package o1.game
 
-import o1.game.entities.npc.boss.BossDialogue
+import o1.game.entities.LockedDoor
+import o1.game.entities.npc.boss.{Boss, BossDialogue}
 import o1.game.entities.npc.{BootlickerGolem, Mob, PrinterJamSlime}
 import o1.game.entities.player.Player
+import o1.game.item.AccessCard
 import o1.game.item.consumables.forms.{AccessForm, CakeForm, VIPAccessForm}
-import o1.game.item.consumables.potions.{HPotion, SusPotion}
+import o1.game.item.consumables.potions.{DPotion, HPotion, RPotion, SusPotion}
 import o1.game.stages.DialogueArea
 import o1.game.stages.overworldArea.{Elevator1F, Elevator2F, Elevator3F, OverworldArea}
 
-import scala.collection.mutable.{Buffer, Map}
+import scala.collection.mutable.Buffer
 
 
 /** The class `Adventure` represents text adventure games. An adventure consists of a player and
@@ -81,53 +83,59 @@ class Overworld(val currentGame: Game):
   f3East1.setNeighbors(Vector("east" -> f3East2, "west" -> Elevator3F))
 
   f3East2North1.setNeighbors(Vector("east" -> f3East3North1, "south" -> f3East2))
-  f3East2.setNeighbors(Vector("north" -> f3East2North1, "east" -> f3East3, "south" -> f3East2South1))
+  f3East2.setNeighbors(Vector("north" -> f3East2North1, "east" -> f3East3, "west" -> f3East1 ,"south" -> f3East2South1))
   f3East2South1.setNeighbors(Vector("north" -> f3East2, "east" -> f3East3South1))
 
   f3East3North1.setNeighbors(Vector("east" -> f3East4North1, "south" -> f3East3, "west" -> f3East2North1))
-  f3East3.setNeighbors(Vector("north" -> f3East3North1, "east" -> f3East4, "south" -> f3East3South1))
+  f3East3.setNeighbors(Vector("north" -> f3East3North1, "east" -> f3East4, "west" -> f3East2 , "south" -> f3East3South1))
   f3East3South1.setNeighbors(Vector("north" -> f3East3, "east" -> f3East4South1, "west" -> f3East2South1))
 
   f3East4North1.setNeighbors(Vector("south" -> f3East4, "west" -> f3East3North1))
-  f3East4.setNeighbors(Vector("north" -> f3East4North1, "east" -> f3East5, "south" -> f3East4South1))
+  f3East4.setNeighbors(Vector("north" -> f3East4North1, "east" -> f3East5, "west" -> f3East3 , "south" -> f3East4South1))
   f3East4South1.setNeighbors(Vector("north" -> f3East4, "west" -> f3East3South1))
 
   f3East5North1.setNeighbors(Vector("east" -> f3East6North1, "south" -> f3East5))
-  f3East5.setNeighbors(Vector("north" -> f3East5North1, "east" -> f3East6, "south" -> f3East5South1))
+  f3East5.setNeighbors(Vector("north" -> f3East5North1, "east" -> f3East6, "west" -> f3East4 , "south" -> f3East5South1))
   f3East5South1.setNeighbors(Vector("north" -> f3East5, "east" -> f3East6South1))
 
   f3East6North1.setNeighbors(Vector("east" -> f3East7North1, "south" -> f3East6, "west" -> f3East5North1))
-  f3East6.setNeighbors(Vector("north" -> f3East6North1, "east" -> f3East7, "south" -> f3East6South1))
+  f3East6.setNeighbors(Vector("north" -> f3East6North1, "east" -> f3East7, "west" -> f3East5 , "south" -> f3East6South1))
   f3East6South1.setNeighbors(Vector("north" -> f3East6, "east" -> f3East7South1, "west" -> f3East5South1))
 
   f3East7North1.setNeighbors(Vector("south" -> f3East7, "west" -> f3East6North1))
-  f3East7.setNeighbors(Vector("north" -> f3East7North1, "east" -> f3BossRoom, "south" -> f3East7South1))
+  f3East7.setNeighbors(Vector("north" -> f3East7North1, "east" -> f3BossRoom, "west" -> f3East6 , "south" -> f3East7South1))
   f3East7South1.setNeighbors(Vector("north" -> f3East7, "west" -> f3East6South1))
 
+  f3BossRoom.setNeighbor("east" , f3East7)
 
   // TODO: temp for testing
   def start = f3East7
 
-  def destination = f2MazeCenter
+  def destination = f3BossRoom
 
   val player = Player(this.start)
   this.start.player = Some(player)
+
+  val accessCard = AccessCard(this.player)
+  LockedDoor(f2East2, this.player , accessCard)
 
 
   f1Lobby.addItem(CakeForm(this.player))
   f1Lobby.addItem(AccessForm(this.player))
   f1Lobby.addItem(SusPotion(this.player, "s"))
   f2West1.addItem(HPotion(this.player))
+  f2West1South1.addItem(accessCard)
+  f2East2.addItem(DPotion(this.player))
   f2East2South1.addItem(VIPAccessForm(this.player))
+  f2South2East1.addItem(RPotion(this.player))
 
-  val bossDialogueArea = new DialogueArea(BossDialogue.root)
+  val bossDialogueArea = DialogueArea(BossDialogue.root, currentGame)
   f3BossRoom.addDialogue(bossDialogueArea)
 
   private var allMobs: Buffer[Mob] = Buffer(PrinterJamSlime(f2South1, this.player), BootlickerGolem(80081369, f3East4, this.player), BootlickerGolem(42000420, f3East5, this.player))
 
   def removeDeadMobs() =
     allMobs = allMobs.filterNot(_.isDead)
-    println(allMobs)
 
 
   def playTurn(): Unit =

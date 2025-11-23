@@ -2,6 +2,7 @@ package o1.game.entities.player
 
 import o1.game.*
 import o1.game.entities.npc.Mob
+import o1.game.entities.npc.boss.Boss
 import o1.game.entities.{CombatEntity, OverworldEntity}
 import o1.game.item.*
 import o1.game.stages.overworldArea.{Elevator2F, Elevator3F, OverworldArea}
@@ -20,7 +21,10 @@ import scala.util.Random
 class Player(startingArea: OverworldArea) extends OverworldEntity(startingArea) , CombatEntity(10 , 5):
   private var quitCommandGiven = false              // one-way flag
   private val ownedItems = Map[String,Item]()
+  private var hasShield = false
+  private var rageCounter = 0
   private var tempEffect : Option[String] = None
+  var boss: Option[Boss] = None
   val specialString: String = "@" //appended at the end of a [String] return value to indicate non-turn-costing outcomes
   /** Determines if the player has indicated a desire to quit the game. */
 
@@ -28,8 +32,17 @@ class Player(startingArea: OverworldArea) extends OverworldEntity(startingArea) 
   def inCombat: Boolean = this.enemies.nonEmpty
   def inDialogue: Boolean = this.currentLocation.dialogue.nonEmpty
   def enemies: Map[String , Mob] = this.currentLocation.mobs
+
   def clearTempEffect() = tempEffect = None
-  
+
+  def shieldUp() =
+    hasShield = true
+
+  def hasRage = rageCounter > 0
+  def rageUp() =
+    rageCounter = 5
+  def rageReduce() =
+    rageCounter -= 1
 
 
   def die() =
@@ -47,23 +60,25 @@ class Player(startingArea: OverworldArea) extends OverworldEntity(startingArea) 
 
   def go(direction: String) : String =
     val destination = this.currentLocation.neighbor(direction)
-    def description: String = if destination.isDefined then s"You go $direction." else s"You can't go $direction!"
+    def description: String = if destination.isDefined then s"You go $direction." else s"You can't go $direction!" + specialString
     destination match
       case Some(Elevator2F) => {
         if Elevator2F.isAccessible then
           move(Elevator2F)
           description
-        else "This floor is not accessible yet! Hint: Find an item to help you."
+        else "This floor is not accessible yet! Hint: Find an item to help you." + specialString
       }
       case Some(Elevator3F) => {
         if Elevator3F.isAccessible then
           move(Elevator3F)
           description
-        else "The floor above is a VIP area! You do not have VIP access! Hint: Explore the current floor."
+        else "The floor above is a VIP area! You do not have VIP access! Hint: Explore the current floor." + specialString
       }
       case Some(area) => {
-        move(area)
-        description
+        if area.door.forall(_.isUnlocked) then
+          move(area)
+          description
+        else "The door is locked! Hint: Find an item to help you." + specialString
       }
       case None => description
 
@@ -90,18 +105,21 @@ class Player(startingArea: OverworldArea) extends OverworldEntity(startingArea) 
   def has(itemName:String): Boolean=
     this.ownedItems.contains(itemName)
 
-  def inventory: String =
-    val outcome = {if this.ownedItems.nonEmpty then
-                    s"You are carrying:\n${this.ownedItems.keys.mkString("\n")}"
-                  else "You are empty-handed." }
-    outcome + specialString
+  def status: String =
+    val status: String = s"HP: ${remainingHealth}/${maxHealth}.\nShield: ${if this.hasShield then "Yes" else "No"}.\nRage's remaining turn: ${this.rageCounter}."
+    val outcome = {
+      if this.ownedItems.nonEmpty then
+        s"You are carrying:\n${this.ownedItems.keys.mkString("\n")}"
+      else "You are empty-handed."
+    }
+    status + "\n\n" + outcome + specialString
 
   def use(itemName: String): String =
     if this.has(itemName) then
       val item = this.ownedItems(itemName)
       if item.isUseable then
         this.ownedItems -= itemName
-        "You used the item!\n\n" + item.effect()
+        "You used the item!\n\n" + item.effect
       else s"${item.name} can't be used!" + specialString
     else "You don't have this item!" + specialString
 
@@ -140,14 +158,32 @@ class Player(startingArea: OverworldArea) extends OverworldEntity(startingArea) 
 
   def suffer(cause: String , damage: Int): String =
     val initialHP = remainingHealth
-    if this.tempEffect.contains("guarded") then
-      remainingHealth -= damage / 2
-      s"You took ${initialHP - remainingHealth} damage from $cause! The damage was cut in half by your keen guard!"
-    else if this.tempEffect.contains("dodged") then
-      s"You fully dodged attacks from $cause! No damage suffered!"
+    val damageReport: String = {
+      if this.tempEffect.contains("guarded") then
+        remainingHealth -= damage / 2
+        s"You took ${initialHP - remainingHealth} damage from $cause! The damage was cut in half by your keen guard!"
+      else if this.tempEffect.contains("dodged") then
+        s"You fully dodged attacks from $cause! No damage suffered!"
+      else
+        remainingHealth -= damage
+        s"You took ${initialHP - remainingHealth} damage from $cause! Ouch."
+    }
+    if remainingHealth <= 0 && this.hasShield then
+      this.hasShield = false
+      this.remainingHealth = 1
+      damageReport + "\nClose call! Your Shield protected you!"
     else
-      remainingHealth -= damage
-      s"You took ${initialHP - remainingHealth} damage from $cause! Ouch"
+      damageReport
+
+  def handleChoice(index: Int) =
+    this.currentLocation.dialogue.map(_.chooseOption(index)) match
+      case Some("continue") => "You chose your answer wisely and satisfied Mr. Big Boss."
+      case Some("combat") => {
+        boss = Some(Boss(currentLocation, this))
+        "Mr. Big Boss: 'How dare you!!!'"
+      }
+      case Some("end") => "You win!"
+      case other => ""
 
     /*if effect.isDefined && damage != 0 then
       effect.foreach(statusEffects += _)

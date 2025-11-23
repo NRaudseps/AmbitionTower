@@ -4,8 +4,9 @@ import o1.game.entities.player.Player
 import o1.game.entities.{CombatEntity, OverworldEntity}
 import o1.game.stages.overworldArea.OverworldArea
 
-class PrinterJamSlime(startingArea: OverworldArea, enemy: Player) extends Mob("Slime", enemy, ""), OverworldEntity(startingArea), CombatEntity(7, 2):
-  // TODO: need better names. What the hell does alternate1 and alternate2 mean???
+class PrinterJamSlime(startingArea: OverworldArea, enemy: Player) extends Mob("slime", "PrinterJamSlime" , enemy, ""), OverworldEntity(startingArea), CombatEntity(7, 2):
+  // TODO: need better names. What the hell does alternate1 and alternate2 mean??? 
+  // TODO: idk man its 2AM, wut u expect
   var alternate1 = false
 
   def pathFind: String =
@@ -30,7 +31,7 @@ class PrinterJamSlime(startingArea: OverworldArea, enemy: Player) extends Mob("S
     else
       this.die()
 
-class BootlickerGolem(val id: Int, startingArea: OverworldArea, enemy: Player) extends Mob("Bootlicker Golem | Employee's ID: " + id, enemy, ""), OverworldEntity(startingArea), CombatEntity(20, 5):
+class BootlickerGolem(val id: Int, startingArea: OverworldArea, enemy: Player) extends Mob("golem","Bootlicker Golem | Employee's ID: " + id, enemy, ""), OverworldEntity(startingArea), CombatEntity(20, 5):
   val directions = {
     if this.id % 2 != 0 then
       Vector[String]("north", "west", "south", "east").zipWithIndex.map((direction, index) => (index, direction)).toMap
@@ -62,8 +63,3 @@ class BootlickerGolem(val id: Int, startingArea: OverworldArea, enemy: Player) e
         this.attack
     else
       this.die()
-
-/*var index = 1
-    while index <= 4 && this.location.neighbor(directions(index)).isEmpty do
-      index +=1
-    directions(index)*/
