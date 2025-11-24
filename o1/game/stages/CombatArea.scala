@@ -20,7 +20,7 @@ class CombatArea(val overworld: Overworld, val currentGame: Game) extends Stage(
 
   def isFinished = this.isFin1shed
 
-  //everything here is written to account for multi-enemies fights, but there will be none in the game;
+  //written to account for multi-enemies fights, but there will be none in the game;
   //if multi-enemies fights are to occur, there will be a speed stats to determine turn order, but as mentioned, there will be
   //no such fights and hence, no such stats
   def mobsTurn(): String =
@@ -47,6 +47,6 @@ class CombatArea(val overworld: Overworld, val currentGame: Game) extends Stage(
 
   def fullDescription: String =
     val playerHP = s"\nYour HP: ${this.player.remainingHealth}/${this.player.maxHealth}"
-    val mobsHP = s"\n${this.mobs.map((name, mob) => name + "'s HP: " + s"${mob.remainingHealth}/${mob.maxHealth}").mkString("\n")}"
+    val mobsHP = s"\n${this.mobs.map((name, mob) => name + "'s HP: " + s"${mob.remainingHealth}/${mob.maxHealth}" + s"(keyword: ${mob.keyword})").mkString("\n")}"
     val turnReport = s"\n\nTURN ${this.occurredTurns}" + playerHP + mobsHP
-    s"YOU ARE $name\n\nYou encountered enemies!\n\nCurrently fighting: ${this.mobs.keys.mkString(", ")}.\nYour options: Attack , Rest , Guard , Dodge, Use items. Every action costs a turn." + turnReport
+    s"YOU ARE $name\n\nYou encountered enemies!\n\nCurrently fighting: ${this.mobs.keys.mkString(", ")}.\nYour options: Attack (use with keyword) , Rest , Guard , Dodge, Use items. Every action costs a turn." + turnReport

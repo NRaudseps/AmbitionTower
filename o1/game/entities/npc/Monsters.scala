@@ -4,34 +4,33 @@ import o1.game.entities.player.Player
 import o1.game.entities.{CombatEntity, OverworldEntity}
 import o1.game.stages.overworldArea.OverworldArea
 
-class PrinterJamSlime(startingArea: OverworldArea, enemy: Player) extends Mob("slime", "PrinterJamSlime" , enemy, ""), OverworldEntity(startingArea), CombatEntity(7, 2):
-  // TODO: need better names. What the hell does alternate1 and alternate2 mean??? 
-  // TODO: idk man its 2AM, wut u expect
-  var alternate1 = false
+class PrinterJamSlime(startingArea: OverworldArea, enemy: Player) extends Mob("slime", "PrinterJamSlime" , enemy), OverworldEntity(startingArea), CombatEntity(7, 2):
 
+  var north = true
+  
   def pathFind: String =
-    alternate1 = !alternate1
-    if alternate1 then
+    north = !north
+    if !north then
       "south"
     else
       "north"
-
+      
   def attack: String =
     this.enemy.suffer(this.name, this.attackPower)
 
-  var alternate2 = true
+  var attackTurn = true
 
-  def fight() =
+  def fight(): String =
     if remainingHealth > 0 then
-      alternate2 = !alternate2
-      if alternate2 then
+      attackTurn = !attackTurn
+      if attackTurn then
         this.attack
       else
         this.waitOut
     else
       this.die()
 
-class BootlickerGolem(val id: Int, startingArea: OverworldArea, enemy: Player) extends Mob("golem","Bootlicker Golem | Employee's ID: " + id, enemy, ""), OverworldEntity(startingArea), CombatEntity(20, 5):
+class BootlickerGolem(val id: Int, startingArea: OverworldArea, enemy: Player) extends Mob("golem","Bootlicker Golem | Employee's ID: " + id, enemy), OverworldEntity(startingArea), CombatEntity(15, 3):
   val directions = {
     if this.id % 2 != 0 then
       Vector[String]("north", "west", "south", "east").zipWithIndex.map((direction, index) => (index, direction)).toMap
@@ -51,15 +50,15 @@ class BootlickerGolem(val id: Int, startingArea: OverworldArea, enemy: Player) e
         index = 0
     directions(index)
 
-  var counter = 0
+  var waitCounter = 0
 
   def fight() =
     if this.remainingHealth > 0 then
-      if counter < 3 then
-        counter += 1
+      if waitCounter < 3 then
+        waitCounter += 1
         this.waitOut
       else
-        counter = 0
+        waitCounter = 0
         this.attack
     else
       this.die()

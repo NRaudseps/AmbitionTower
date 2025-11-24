@@ -18,7 +18,7 @@ import scala.util.Random
   *
   * @param startingArea  the player’s initial location */
 
-class Player(startingArea: OverworldArea) extends OverworldEntity(startingArea) , CombatEntity(10 , 5):
+class Player(startingArea: OverworldArea) extends OverworldEntity(startingArea) , CombatEntity(20 , 5):
   private var quitCommandGiven = false              // one-way flag
   private val ownedItems = Map[String,Item]()
   private var hasShield = false
@@ -66,7 +66,7 @@ class Player(startingArea: OverworldArea) extends OverworldEntity(startingArea) 
         if Elevator2F.isAccessible then
           move(Elevator2F)
           description
-        else "This floor is not accessible yet! Hint: Find an item to help you." + specialString
+        else "The upper floor is not accessible yet! Hint: Find an item to help you move on." + specialString
       }
       case Some(Elevator3F) => {
         if Elevator3F.isAccessible then
@@ -180,9 +180,9 @@ class Player(startingArea: OverworldArea) extends OverworldEntity(startingArea) 
       case Some("continue") => "You chose your answer wisely and satisfied Mr. Big Boss."
       case Some("combat") => {
         boss = Some(Boss(currentLocation, this))
-        "Mr. Big Boss: 'How dare you!!!'"
+        "Mr. Big Boss: 'How foolish! And you chose to stand against me with that kind of resolve!'"
       }
-      case Some("end") => "You win!"
+      case Some("end") => "Mr. Big Boss smiles.\nMr. Big Boss: 'I see. Your cause is one of greatness.'\nMr. Big Boss: 'Then I shall let you have your way.'"
       case other => ""
 
     /*if effect.isDefined && damage != 0 then

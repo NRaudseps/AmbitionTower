@@ -20,8 +20,8 @@ class Game:
   def enterCombat() =
     combatArea = Some(CombatArea(this.overworld, this))
 
-  def enterDialogue() = this.dialogueArea = Some(this.overworld.bossDialogueArea) // TODO: temp solution, only works if boss is the only dialogue area
-
+  def enterDialogue() = this.dialogueArea = Some(this.overworld.bossDialogueArea) //temp solution, only works if boss is the only dialogue area
+                                                                                  //the other dev: this is a first work of an amateur in some short time, so it's absolutely okay
   def inCombat = this.combatArea.nonEmpty
   def inDialogue = this.dialogueArea.nonEmpty
   
@@ -36,16 +36,16 @@ class Game:
   def isOver = this.isComplete || this.player.hasQuit || this.turnCount == this.timeLimit || this.player.isDead
 
 
-  def welcomeMessage = "DING.\nThe elevator doors slide open, releasing a gust of overly conditioned air that smells faintly of toner and desperation. A polished sign greets you in gold lettering:\n\n“WELCOME TO AMBITION TOWER – WHERE CAREERS ASCEND.”\n\nThe lobby stretches ahead, immaculate and sterile. Rows of reception desks line the walls, manned by identical attendants whose smiles never reach their eyes. Behind them, filing cabinets hum softly like hives. Somewhere between the chatter of phones and the click of heels, you sense the quiet dread of efficiency perfected.\n\nThe Tower calls to you, Adventurer.\nMay you learn its language of forms and approvals, and climb to the top before its cruelty ultimately swallows and corrupts you whole..."
+  def welcomeMessage = "DING.\nThe elevator doors slide open, releasing a gust of overly conditioned air that smells faintly of toner and desperation. A polished sign greets you in gold lettering:\n\n“WELCOME TO AMBITION TOWER – WHERE CAREERS ASCEND.”\n\nThe lobby stretches ahead, immaculate and sterile. Rows of reception desks line the walls, manned by identical attendants whose smiles never reach their eyes. Behind them, filing cabinets hum softly like hives. Somewhere between the chatter of phones and the click of heels, you sense the quiet dread of efficiency perfected.\n\nThe Tower calls to you, Adventurer.\nMay you learn its language of forms and approvals, and climb to the top before its cruelty ultimately swallows and corrupts you whole...\n\nOBJECTIVE: MAKE YOUR WAY TO THE TOP OF THE TOWER AND DEFEAT MR. BIG BOSS."
   def goodbyeMessage =
     if this.isComplete then
-      "Home at last... and phew, just in time! Well done!" //TODO: write different messages
+      "Mr. Big Boss collapses back into his towering chair, the echo reverberating through the chamber.\nA hush sweeps the tower — a silence of recognition.\nYou’ve done it. You’ve shattered the ceiling above you.\nCongratulations, Adventurer!\nYou are now… CEO of Your Own Fate. (200 C Points?? please??)"
     else if this.player.isDead then
       "You fall to your knees. With no more strength left to struggle, your soul inevitably gets consumed by the Tower, becoming a puny cog in the perfect machine that turns passion into cold, hard profit. New 'Adventurers' will keep challenging the Tower and its trials, while your own story completely lost in history. Game over!"
     else if this.turnCount == this.timeLimit then
-      "Oh no! Time's up. Starved of entertainment, you collapse and weep like a child.\nGame over!" //TODO: write different messages
+      "In a corporate setting, deadlines matter. You struggled to scale the Tower in time, despite all the effort you have put in. Ultimately, your initial ambitions will fade, and all that is left will be an empty husk drained of its life by the Tower it once tried and failed to conquer.\nGame over!"
     else  // game over due to player quitting
-      "Quitter!"
+      "Mr. Big Boss: 'A shame. Surely we'll meet in our next fateful encounter.'"
 
   private def gameTurn(): Option[String] =
     if this.player.inCombat && !this.inCombat then
