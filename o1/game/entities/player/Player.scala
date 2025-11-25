@@ -25,14 +25,15 @@ class Player(startingArea: OverworldArea) extends OverworldEntity(startingArea) 
   private var rageCounter = 0
   private var tempEffect : Option[String] = None
   var boss: Option[Boss] = None
-  val specialString: String = "@" //appended at the end of a [String] return value to indicate non-turn-costing outcomes
+  val specialString: String = "@"
+  //appended at the end of a [String] return value to indicate non-turn-costing outcomes
   /** Determines if the player has indicated a desire to quit the game. */
 
   def hasQuit = this.quitCommandGiven
   def inCombat: Boolean = this.enemies.nonEmpty
   def inDialogue: Boolean = this.currentLocation.dialogue.nonEmpty
   def enemies: Map[String , Mob] = this.currentLocation.mobs
-
+  def enemiesKeyword: Map[String , Mob] = this.enemies.map(  (name , mob) => (mob.keyword , mob)  )
   def clearTempEffect() = tempEffect = None
 
   def shieldUp() =
@@ -44,11 +45,30 @@ class Player(startingArea: OverworldArea) extends OverworldEntity(startingArea) 
   def rageReduce() =
     rageCounter -= 1
 
-
   def die() =
     this.currentLocation.player = None
     this.remainingHealth = 0
     this.isDead = true
+
+  def handleChoice(index: Int) =
+    this.currentLocation.dialogue.map(_.chooseOption(index)) match
+      case Some("continue") => "You chose your answer wisely and satisfied Mr. Big Boss."
+      case Some("combat") => {
+        boss = Some(Boss(currentLocation, this))
+        "Mr. Big Boss: 'How foolish! And you chose to stand against me with that kind of resolve!'"
+      }
+      case Some("end") => "Mr. Big Boss smiles. He looks at you with a resigned expression."
+      case other => ""
+
+
+  def helpOverworld =
+    "AVAILABLE COMMANDS:\n• go [direction]:\nMove one step in the chosen direction (north, south, east, west, etc.). This action passes a turn. If the path is blocked, you stay where you are.\n• rest:\nTake a moment to recover. Resting passes a turn and restores a small amount of health.\n• get [item]:\nPick up an item found in the area. Passes a turn.\n• drop [item]:\nPlace an item from your inventory onto the ground. Passes a turn.\n• use [item]:\nUse an item in your possession. Effects vary depending on the item. This passes a turn.\n• examine [item]:\nTake a closer look at an item in your inventory. Does not pass a turn.\n• status:\nCheck your current condition — health, inventory, and any special states. Does not pass a turn.\n• help:\nDisplay this list of available commands. Does not pass a turn.\n• quit:\nExit the game." + specialString
+
+  def helpCombat =
+    "AVAILABLE COMMANDS:\n• attack [enemy's keyword]:\nStrike the enemy with a basic offensive move. Damage varies based on your stats and the situation. Use with the enemy's stated keyword. This action passes a turn.\n• guard:\nBrace yourself and reduce incoming damage for the next enemy action. This action passes a turn.\n• dodge:\nAttempt to avoid the next incoming attack. Success depends on PURE LUCK, PRAY TO RNG. This action passes a turn.\n• rest:\nTake a moment to recover. Resting passes a turn and restores a small amount of health.\n• use [item]:\nUse an item in your possession. Effects vary depending on the item. This passes a turn.\n• examine [item]:\nTake a closer look at an item in your inventory. Does not pass a turn.\n• status:\nCheck your current condition — health, inventory, and any special states. Does not pass a turn.\n• help:\nDisplay this list of available commands. Does not pass a turn.\n• quit:\nExit the game." + specialString
+
+  def helpDialogue =
+    "AVAILABLE COMMANDS:\nChoose between the dialogue options using the indicated numbers (1, 2, or 3).\nThe 'help' command is also available here and does not cost a turn."
 
   /** Attempts to move the player in the given direction. This is successful if there
     * is an exit from the player’s current location towards the direction name. Returns
@@ -90,6 +110,10 @@ class Player(startingArea: OverworldArea) extends OverworldEntity(startingArea) 
     else
       s"There is no ${itemName} here to pick up." + specialString
 
+
+  def has(itemName:String): Boolean=
+    this.ownedItems.contains(itemName)
+
   def drop(itemName:String):String=
     if this.has(itemName) then
       this.ownedItems.get(itemName).foreach(this.currentLocation.addItem)
@@ -101,9 +125,6 @@ class Player(startingArea: OverworldArea) extends OverworldEntity(startingArea) 
     if this.has(itemName) then
       s"You look closely at the ${itemName}.\n${this.ownedItems(itemName).description}"
     else "If you want to examine something, you need to pick it up first." + specialString
-
-  def has(itemName:String): Boolean=
-    this.ownedItems.contains(itemName)
 
   def status: String =
     val status: String = s"HP: ${remainingHealth}/${maxHealth}.\nShield: ${if this.hasShield then "Yes" else "No"}.\nRage's remaining turn: ${this.rageCounter}."
@@ -137,11 +158,11 @@ class Player(startingArea: OverworldArea) extends OverworldEntity(startingArea) 
     this.quitCommandGiven = true
     ""
 
-  def attack(enemy: String): String=
-    if this.enemies.contains(enemy) then
+  def attack(keyword: String): String=
+    if this.enemiesKeyword.contains(keyword) then
       val damage = this.attackPower
-      this.enemies(enemy).remainingHealth -= damage
-      s"You dealt ${damage} to ${enemy}!"
+      this.enemiesKeyword(keyword).remainingHealth -= damage
+      s"You dealt ${damage} to ${this.enemiesKeyword(keyword).name}!"
     else
       "Please specify which enemy to attack." + specialString
 
@@ -174,16 +195,6 @@ class Player(startingArea: OverworldArea) extends OverworldEntity(startingArea) 
       damageReport + "\nClose call! Your Shield protected you!"
     else
       damageReport
-
-  def handleChoice(index: Int) =
-    this.currentLocation.dialogue.map(_.chooseOption(index)) match
-      case Some("continue") => "You chose your answer wisely and satisfied Mr. Big Boss."
-      case Some("combat") => {
-        boss = Some(Boss(currentLocation, this))
-        "Mr. Big Boss: 'How foolish! And you chose to stand against me with that kind of resolve!'"
-      }
-      case Some("end") => "Mr. Big Boss smiles.\nMr. Big Boss: 'I see. Your cause is one of greatness.'\nMr. Big Boss: 'Then I shall let you have your way.'"
-      case other => ""
 
     /*if effect.isDefined && damage != 0 then
       effect.foreach(statusEffects += _)

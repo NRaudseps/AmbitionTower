@@ -108,7 +108,6 @@ class Overworld(val currentGame: Game):
 
   f3BossRoom.setNeighbor("east" , f3East7)
 
-  // TODO: temp for testing
   def start = f1Lobby
 
   def destination = f3BossRoom
@@ -122,12 +121,13 @@ class Overworld(val currentGame: Game):
 
   f1Lobby.addItem(CakeForm(this.player))
   f1Lobby.addItem(AccessForm(this.player))
-  f1Lobby.addItem(SusPotion(this.player, "s"))
+  f1Lobby.addItem(SusPotion(this.player, "ah")) //todo
   f2West1.addItem(HPotion(this.player))
   f2West1South1.addItem(accessCard)
-  f2East2.addItem(DPotion(this.player))
+  f2East2.addItem(DPotion(this.player)) //todo
   f2East2South1.addItem(VIPAccessForm(this.player))
   f2South2East1.addItem(RPotion(this.player))
+  //TODO: Change some items' staring areas (death potion, suspotion) + add Advanced HP
 
   val bossDialogueArea = DialogueArea(BossDialogue.root, currentGame)
   f3BossRoom.addDialogue(bossDialogueArea)

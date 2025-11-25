@@ -6,8 +6,10 @@ class SusPotion(user: Player , potionType:String) extends Potion(user , potionTy
 
 class SPotion(user: Player) extends Potion(user , "s" , "Shield Potion" , "It gives you Shield.")
 
-class HPotion(user: Player) extends Potion(user , "h" , "Healing Potion" , "It heals 5 HP.")
+class HPotion(user: Player) extends Potion(user , "h" , "Healing Potion" , "It heals 10 HP.")
 
 class RPotion(user: Player) extends Potion(user , "r" , "Rage Potion" , "It grants you Rage for 5 turns.")
 
 class DPotion(user: Player) extends Potion(user , "d" , "Death Potion" , "Go ahead. I dare you. :^)")
+
+class AHPotion(user: Player) extends Potion(user , "ah" , "Advanced Healing Potion" , "It heals 15 HP.")

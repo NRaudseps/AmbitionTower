@@ -12,8 +12,9 @@ class DialoguePlayerActions(input: String) extends PlayerActions:
 
   def execute(actor: Player): Option[String] =
     this.verb match
-      case "1"  => Some(actor.handleChoice(0))
-      case "2"  => Some(actor.handleChoice(1))
-      case "3"  => Some(actor.handleChoice(2))
-      case _ => None
+      case "1"     => Some(actor.handleChoice(0))
+      case "2"     => Some(actor.handleChoice(1))
+      case "3"     => Some(actor.handleChoice(2))
+      case "help"  => Some(actor.helpDialogue)
+      case _       => None
     

@@ -19,6 +19,7 @@ class CombatPlayerActions(input: String) extends PlayerActions:
       case "examine"    => Some(actor.examine(this.modifiers))
       case "status"     => Some(actor.status)
       case "use"        => Some(actor.use(this.modifiers))
+      case "help"      => Some(actor.helpCombat)
       case other        => None
 
   /** Returns a textual description of the action object, for debugging purposes. */

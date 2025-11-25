@@ -49,4 +49,4 @@ class CombatArea(val overworld: Overworld, val currentGame: Game) extends Stage(
     val playerHP = s"\nYour HP: ${this.player.remainingHealth}/${this.player.maxHealth}"
     val mobsHP = s"\n${this.mobs.map((name, mob) => name + "'s HP: " + s"${mob.remainingHealth}/${mob.maxHealth}" + s"(keyword: ${mob.keyword})").mkString("\n")}"
     val turnReport = s"\n\nTURN ${this.occurredTurns}" + playerHP + mobsHP
-    s"YOU ARE $name\n\nYou encountered enemies!\n\nCurrently fighting: ${this.mobs.keys.mkString(", ")}.\nYour options: Attack (use with keyword) , Rest , Guard , Dodge, Use items. Every action costs a turn." + turnReport
+    s"YOU ARE $name\n\nYou encountered enemies!\n\nCurrently fighting: ${this.mobs.keys.mkString(", ")}.\nYour options: Attack (use with keyword) , Rest , Guard , Dodge, Use items." + turnReport

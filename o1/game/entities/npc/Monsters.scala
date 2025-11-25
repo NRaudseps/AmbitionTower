@@ -4,7 +4,7 @@ import o1.game.entities.player.Player
 import o1.game.entities.{CombatEntity, OverworldEntity}
 import o1.game.stages.overworldArea.OverworldArea
 
-class PrinterJamSlime(startingArea: OverworldArea, enemy: Player) extends Mob("slime", "PrinterJamSlime" , enemy), OverworldEntity(startingArea), CombatEntity(7, 2):
+class PrinterJamSlime(startingArea: OverworldArea, enemy: Player) extends Mob("slime", "Printer Jam Slime" , enemy), OverworldEntity(startingArea), CombatEntity(7, 2):
 
   var north = true
   
