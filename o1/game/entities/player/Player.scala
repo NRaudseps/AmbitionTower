@@ -18,7 +18,7 @@ import scala.util.Random
   *
   * @param startingArea  the player’s initial location */
 
-class Player(startingArea: OverworldArea) extends OverworldEntity(startingArea) , CombatEntity(20 , 5):
+class Player(startingArea: OverworldArea) extends OverworldEntity(startingArea) , CombatEntity(20 , 3):
   private var quitCommandGiven = false              // one-way flag
   private val ownedItems = Map[String,Item]()
   private var hasShield = false
@@ -59,7 +59,6 @@ class Player(startingArea: OverworldArea) extends OverworldEntity(startingArea) 
       }
       case Some("end") => "Mr. Big Boss smiles. He looks at you with a resigned expression."
       case other => ""
-
 
   def helpOverworld =
     "AVAILABLE COMMANDS:\n• go [direction]:\nMove one step in the chosen direction (north, south, east, west, etc.). This action passes a turn. If the path is blocked, you stay where you are.\n• rest:\nTake a moment to recover. Resting passes a turn and restores a small amount of health.\n• get [item]:\nPick up an item found in the area. Passes a turn.\n• drop [item]:\nPlace an item from your inventory onto the ground. Passes a turn.\n• use [item]:\nUse an item in your possession. Effects vary depending on the item. This passes a turn.\n• examine [item]:\nTake a closer look at an item in your inventory. Does not pass a turn.\n• status:\nCheck your current condition — health, inventory, and any special states. Does not pass a turn.\n• help:\nDisplay this list of available commands. Does not pass a turn.\n• quit:\nExit the game." + specialString
@@ -148,7 +147,7 @@ class Player(startingArea: OverworldArea) extends OverworldEntity(startingArea) 
     * Returns a description of what happened. */
   def rest():String =
     val initialHealth = this.remainingHealth
-    val healedAmount = this.maxHealth/5
+    val healedAmount = this.maxHealth/10
     this.heal(healedAmount)
     s"You rest for a while and heal ${this.remainingHealth-initialHealth} HP."
 

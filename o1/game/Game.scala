@@ -13,7 +13,7 @@ class Game:
   var dialogueArea: Option[DialogueArea] = None
   var turnCount = 0
   private var isDialogueWin = false
-  private val timeLimit = 99
+  private val timeLimit = 120
 
 
 

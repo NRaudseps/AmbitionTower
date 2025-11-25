@@ -29,7 +29,6 @@ class OverworldArea(name: String, val description: String) extends Stage(name):
     * is returned in an `Option`; `None` is returned if there is no exit in the given direction. */
   def neighbor(direction: String) = this.neighbors.get(direction)
 
-
   /** Adds an exit from this area to the given area. The neighboring area is reached by moving in
     * the specified direction from this area. */
   def setNeighbor(direction: String, neighbor: OverworldArea):Map[String,OverworldArea] =
