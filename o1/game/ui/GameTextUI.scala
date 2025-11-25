@@ -9,7 +9,7 @@ import scala.io.StdIn.*
   * it can be run to start up a user interface that operates in the text console.
   * @see [[GameGUI]] */
 object GameTextUI extends App:
-
+//game is not made with text UI in mind; play at your own discretion.
   private val game = Game()
   private val player = game.player
   this.run()

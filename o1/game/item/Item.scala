@@ -12,8 +12,7 @@ import o1.game.entities.player.Player
   * @param name         the item’s name
   * @param description  the item’s description */
 trait Item(val user: Player , val isUseable: Boolean, val name: String, val description: String):
-  def effect() : String
-
+  def effect: String
   /** Returns a short textual representation of the item (its name, that is). */
   override def toString = this.name
 end Item

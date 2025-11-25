@@ -3,13 +3,21 @@ package o1.game.item.consumables.potions
 
 import o1.game.entities.player.Player
 import o1.game.item.consumables.Consumables
-import o1.game.stages.overworldArea.{Elevator2F, Elevator3F}
 
 class Potion(user: Player , val potionType : String, name:String, description: String) extends Consumables(user, name , description):
-  def effect() =
+  def effect: String =
     if potionType == "s" then
-      "You received a favour from Mr. Big Boss! You have a one-time immunity to being fired." //set health to 1 when the player otherwise dies. unstackable
+      user.shieldUp()
+      "You received a favour from Mr. Big Boss! You have a one-time immunity to being fired. Gained a Shield!" //set health to 1 when the player otherwise dies. unstackable
     else if potionType == "h" then
-      "But nothing happened." //to be implemented health potion's effect
+      user.heal(10)
+      "You heal 10 HP! Tastes like refridgerated energy drinks. Yucks!" //to be implemented health potion's effect
+    else if potionType == "r" then
+      user.rageUp()
+      "The potion makes you burn with motivation (and rage against the corpo). Attack doubled for the next 5 turns."
+    else if potionType == "d" then
+      user.die()
+      "The potion isn't particularly poisonous or anything, but it tastes so bad you couldn't go to work the next day and hence, get fired."
     else
-      "But nothing happened." // to be implemented rage and death potion's effect
+      user.heal(15)
+      "You heal 15 HP! Tastes like strawberry... mixed with capitalism."

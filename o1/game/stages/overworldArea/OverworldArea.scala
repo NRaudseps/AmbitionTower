@@ -1,6 +1,7 @@
 package o1.game.stages.overworldArea
 
 
+import o1.game.entities.LockedDoor
 import o1.game.entities.npc.Mob
 import o1.game.entities.player.Player
 import o1.game.item.Item
@@ -20,13 +21,13 @@ class OverworldArea(name: String, val description: String) extends Stage(name):
   val neighbors = Map[String, OverworldArea]()
   val items =  Map[String, Item]()
   val mobs = Map[String , Mob]()
+  var door: Option[LockedDoor] = None
   var player: Option[Player] = None
   var dialogue: Option[DialogueArea] = None
-
+  private val directions = Vector[String]("north", "east", "south", "west")
   /** Returns the area that can be reached from this area by moving in the given direction. The result
     * is returned in an `Option`; `None` is returned if there is no exit in the given direction. */
   def neighbor(direction: String) = this.neighbors.get(direction)
-
 
   /** Adds an exit from this area to the given area. The neighboring area is reached by moving in
     * the specified direction from this area. */
@@ -65,6 +66,9 @@ class OverworldArea(name: String, val description: String) extends Stage(name):
   def containsMob(mobName: String): Boolean=
     this.mobs.contains(mobName)
 
+  private def noNearbyMobs: Boolean =
+    this.neighbors.forall(  (direction,area) => area.mobs.isEmpty  ) && this.neighbors.forall( (direction, area) => area.neighbors.forall( (direction,area) => area.mobs.isEmpty) )
+
   /** Returns a multi-line description of the area as a player sees it. This includes a basic
     * description of the area as well as information about exits and items. If there are no
     * items present, the return value has the form "DESCRIPTION\n\nExits available:
@@ -72,15 +76,13 @@ class OverworldArea(name: String, val description: String) extends Stage(name):
     * value has the form "DESCRIPTION\nYou see here: ITEMS SEPARATED BY SPACES\n\nExits available:
     * DIRECTIONS SEPARATED BY SPACES". The items and directions are listed in an arbitrary order. */
   def fullDescription: String =
-    val itemList = s"\nYou see here: ${this.items.keys.mkString(", ")}"
+    val itemList = s"\n\nYou see here: ${this.items.keys.mkString(", ")}"
     val exitList = "\n\nExit(s) available: " + this.neighbors.keys.mkString(", ")
-    val mobsList = s"\n\n${this.mobs.keys.mkString(", ")}" //for debugging purposes
+    val mobsCheck = s"\n\n${if this.noNearbyMobs then "" else "You hear the rumbling of monsters nearby..."}"
     if this.items.nonEmpty then
-      this.description + itemList + exitList + mobsList
-    else if this.mobs.nonEmpty then // for debugging purposes
-      this.description + exitList + mobsList
+      this.description + itemList + exitList + mobsCheck
     else
-      this.description + exitList
+      this.description + exitList + mobsCheck
 
 
   /** Returns a single-line description of the area for debugging purposes. */
