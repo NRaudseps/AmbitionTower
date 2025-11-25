@@ -12,4 +12,4 @@ class RPotion(user: Player) extends Potion(user , "r" , "Rage Potion" , "It gran
 
 class DPotion(user: Player) extends Potion(user , "d" , "Death Potion" , "Go ahead. I dare you. :^)")
 
-class AHPotion(user: Player) extends Potion(user , "ah" , "Advanced Healing Potion" , "It heals 15 HP.")
+class AHPotion(user: Player) extends Potion(user , "ah" , "Advanced Healing Potion" , "It heals 20 HP.")
