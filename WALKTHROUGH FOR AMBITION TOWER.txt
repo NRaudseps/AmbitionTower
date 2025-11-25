@@ -1,0 +1,77 @@
+WALKTHROUGH FOR AMBITION TOWER:
+
+Most of the information in this walkthrough is already included in the pdf. file "Map of Ambition Tower".
+
+For guide purpose, either this or the "Map of Ambition Tower" is plenty enough. However, it is not that they have the same information or one of them has every information about the game.
+
+Goals of the game:
+
++Make your way to the Boss Room on Floor 3 – the top of the Ambition Tower.
+
++Choose all the dialogue options correctly / Slay the Boss. -> Either one of these conditions is enough.
+
++Don’t die get fired from the Tower/Corporation or go over the turn limit of 120.
+
+Challenges in the game consists of:
+
++A trap item on Floor 1. (A tutorial on items and inventory management).
+
++Navigation challenges & a weak enemy on Floor 2. (Introduction to basic game mechanics - navigation and combat).
+
++Maneuvering around enemies, looting items & fighting Boss on Floor 3. (Application of basic game mechanics and Boss fight).
+
+GUIDE ON HOW TO WIN:
+
+-On Floor 1:
+
++DO NOT use the Cake Form. This is a trap item and will kill you. 
+*Note: It's a Portal/Half-life reference by the way.
+
++Get and use the Access Form to get access Floor 2.
+
++Go North to the Elevator.
+
++From there, you can "go up" to Floor 2.
+
+-On Floor 2:
+
++Go West -> South.
+
++Get and DO NOT drop the Access Card. You need to have it in your inventory to move to the necessary area.
+
++Trace your way back to the Center.
+
++Go East -> East -> South.
+
++Get and use the VIP Access Form. This will grant you access to Floor 3 by using the Elevator.
+
+*Optional: You can get a Rage Potion, which will double your damage for 5 turns, on this floor. This can come in handy when fighting the boss as it effectively cuts the whole boss fight’s duration in half. You can get it by going South -> South -> East from the Center to the Storage Room. You will need to fight a very weak Printer Jam Slime enemy on the way there. If you lost too many HP in the fight, you can always take a turn to “rest” and heal 2 HP. However, there is a 120 turns time limit (which is a lot of time, so no pressure), so be sure to win in time!
+Note that you can technically still complete/win the game without even fighting the boss, or in fact, any enemies.
+
+-On Floor 3:
+
++Go East until you arrive at the Boss Room.
+
++In the dialogue, pick 1 -> 1 -> 1.
+
++Win.
+
+*Note: You may run into fights with Bootlicker Golems if you just charge straight on. There is no way to avoid them completely. However, in the Center of the VIP Reception Hall (Go East from the Elevator 3 times) and the Center of the Ambition Hall (Go East from the Elevator 6 times), the Golems cannot reach you, so you can spend some time resting or using items to heal up.
+
+ADDITIONAL TIPS AND TRICKS:
+
+-Use the “help” command (which does not take a turn) to list all available commands whenever you get stuck, either in the overworld, combat or dialogue. There’s no penalty to doing so whatsoever.
+
+-Answering all the correct dialogue options lets you completely skip the boss fight. There is no difference between winning with dialogue and fighting. But if you so insist, answer one of the dialogues with 2 or 3. 
+
+-The Boss can attack, do nothing, heal himself, or make a scheme (which doubles the damage of his next attack) in a turn, and always perform an Ultimate Attack after 5 turns, which always deals the damage equal to the player’s max HP, essentially a one-shot attack. You can use the Guard or Dodge option to circumvent this.
+
+-You may locate some other potions to help you with fighting enemies (mostly the Boss):
+
++Shield Potion: Prevent death and set your HP to 1 once only. (In Floor 1 – Lobby)
++Health Potion: Heal you for 10 HP. (In Floor 2 – West Wing 1)
++Rage Potion: Double your damage for 5 turns. (In Floor 2 – Storage Room)
++Suspicious Potion: Heal you for 20 HP. (In Floor 3 – VIP Reception Hall’s North Wall 2)
++Advanced Health Potion: Heal you for 20 HP. (In Floor 3 – Ambition Hall’s South Wall 2)
+
+HAVE FUN PLAYING THE GAME!! (and exploring all the tiny tidbits if you are a TA grading the game, such as how the items get transferred between floors by using the elevator :D We’re proud of that one.)

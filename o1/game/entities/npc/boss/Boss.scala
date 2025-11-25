@@ -13,7 +13,7 @@ val BOSS_HEALTH = 30
 val BOSS_ATTACK_DAMAGE = 5
 
 class Boss(startingArea: OverworldArea, enemy: Player) extends Mob(BOSS_KEYWORD,BOSS_NAME, enemy), OverworldEntity(startingArea), CombatEntity(BOSS_HEALTH, BOSS_ATTACK_DAMAGE):
-
+  
   def pathFind = "no path"
   
   def attack: String =
@@ -34,8 +34,8 @@ class Boss(startingArea: OverworldArea, enemy: Player) extends Mob(BOSS_KEYWORD,
     schemed = false
     "Mr. Big Boss unleashes his Ultimate Imaginary Technique: Hollow Pur- I mean, Eyes of the Overworked!\n"+this.enemy.suffer(this.name, this.enemy.maxHealth*2)
 
+  val rng = Random(69420) //funny hehe
   def fight() =
-    val rng = Random(69420) //funny hehe
     if remainingHealth > 0 then
       strongCounter += 1
       val strongWarning = {
