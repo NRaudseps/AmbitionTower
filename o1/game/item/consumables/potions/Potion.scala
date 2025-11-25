@@ -11,7 +11,7 @@ class Potion(user: Player , val potionType : String, name:String, description: S
       "You received a favour from Mr. Big Boss! You have a one-time immunity to being fired. Gained a Shield!" //set health to 1 when the player otherwise dies. unstackable
     else if potionType == "h" then
       user.heal(10)
-      "You heal 10 HP! Tastes like refridgerated energy drinks. Yucks!" //to be implemented health potion's effect
+      "You heal 10 HP! Tastes like refridgerated energy drinks. Yucks!"
     else if potionType == "r" then
       user.rageUp()
       "The potion makes you burn with motivation (and rage against the corpo). Attack doubled for the next 5 turns."
@@ -19,5 +19,5 @@ class Potion(user: Player , val potionType : String, name:String, description: S
       user.die()
       "The potion isn't particularly poisonous or anything, but it tastes so bad you couldn't go to work the next day and hence, get fired."
     else
-      user.heal(15)
-      "You heal 15 HP! Tastes like strawberry... mixed with capitalism."
+      user.heal(20)
+      "You heal 20 HP! Tastes like strawberry... mixed with capitalism."

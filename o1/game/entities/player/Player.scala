@@ -67,7 +67,7 @@ class Player(startingArea: OverworldArea) extends OverworldEntity(startingArea) 
     "AVAILABLE COMMANDS:\n• attack [enemy's keyword]:\nStrike the enemy with a basic offensive move. Damage varies based on your stats and the situation. Use with the enemy's stated keyword. This action passes a turn.\n• guard:\nBrace yourself and reduce incoming damage for the next enemy action. This action passes a turn.\n• dodge:\nAttempt to avoid the next incoming attack. Success depends on PURE LUCK, PRAY TO RNG. This action passes a turn.\n• rest:\nTake a moment to recover. Resting passes a turn and restores a small amount of health.\n• use [item]:\nUse an item in your possession. Effects vary depending on the item. This passes a turn.\n• examine [item]:\nTake a closer look at an item in your inventory. Does not pass a turn.\n• status:\nCheck your current condition — health, inventory, and any special states. Does not pass a turn.\n• help:\nDisplay this list of available commands. Does not pass a turn.\n• quit:\nExit the game." + specialString
 
   def helpDialogue =
-    "AVAILABLE COMMANDS:\nChoose between the dialogue options using the indicated numbers (1, 2, or 3).\nThe 'help' command is also available here and does not cost a turn."
+    "AVAILABLE COMMANDS:\nChoose between the dialogue options using the indicated numbers (1, 2, or 3).\nThe 'help' command is also available here and does not cost a turn." + specialString
 
   /** Attempts to move the player in the given direction. This is successful if there
     * is an exit from the player’s current location towards the direction name. Returns
@@ -163,7 +163,7 @@ class Player(startingArea: OverworldArea) extends OverworldEntity(startingArea) 
       this.enemiesKeyword(keyword).remainingHealth -= damage
       s"You dealt ${damage} to ${this.enemiesKeyword(keyword).name}!"
     else
-      "Please specify which enemy to attack." + specialString
+      "Please specify which enemy to attack using the keyword." + specialString
 
   def guard(): String =
     tempEffect = Some("guarded")
